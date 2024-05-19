@@ -11,8 +11,7 @@ use Illuminate\Support\Str;
 use RealRashid\SweetAlert\Facades\Alert;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\EmployeesExport;
-
-
+use GuzzleHttp\Client;
 
 class EmployeeController extends Controller
 {
@@ -28,13 +27,40 @@ class EmployeeController extends Controller
     {
         $pageTitle = 'Employee List';
 
-        $employee = Employee::all();
+        // $employee = Employee::all();
         confirmDelete();
 
-        return view('employee.index', [
-            'pageTitle' => $pageTitle,
-            'employee' => $employee,
+        // return view('employee.index', [
+        //     'pageTitle' => $pageTitle,
+        //     'employees' => $employee,
+        // ]);
+
+
+        $client = new Client([
+            'base_uri' => "http://127.0.0.1:8000/api/employee",
+            'headers' => [
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Bearer ' . session('api_token'),
+            ],
         ]);
+
+        try {
+            $employeeRes = $client->get('employees', [
+                'http_errors' => false
+            ]);
+
+            if ($employeeRes->getStatusCode() != 200) {
+                throw new \Exception('Failed to fetch employees data.');
+            }
+
+            $employeeData = json_decode($employeeRes->getBody(), true);
+
+            dd($employeeData);
+            return view('employees.index', ['employees' => $employeeData, 'pageTitle' => $pageTitle]);
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => 'Failed to fetch employees data: ' . $e->getMessage()]);
+        }
     }
 
     /**

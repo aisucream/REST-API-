@@ -28,10 +28,10 @@ Route::get('/', function() {
     return redirect('/login');
 });
 
-Route::post('/login', [LoginController::class, 'authenticate']);
+Route::post('/login', [LoginController::class, 'authenticateApi']);
 
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['notoken'])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/profile', ProfileController::class)->name('profile');
     Route::resource('/employees', EmployeeController::class);
