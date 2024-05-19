@@ -28,7 +28,7 @@ Route::get('/', function() {
     return redirect('/login');
 });
 
-Route::post('/login', [LoginController::class, 'authenticateApi']);
+Route::post('/login', [LoginController::class, 'authenticate']);
 
 
 Route::middleware(['auth'])->group(function () {
