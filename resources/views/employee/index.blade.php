@@ -36,13 +36,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($employee as $data)
+                    @foreach ($employees as $data)
                         <tr>
-                            <td>{{ $data->firstname }}</td>
-                            <td>{{ $data->lastname }}</td>
-                            <td>{{ $data->email }}</td>
-                            <td>{{ $data->age }}</td>
-                            <td>{{ $data->position->name }}</td>
+                            <td>{{ $data['firstname'] }}</td>
+                            <td>{{ $data['lastname'] }}</td>
+                            <td>{{ $data['email'] }}</td>
+                            <td>{{ $data['age'] }}</td>
+                            <td>{{ $data['position']['name'] }}</td>
                             <td>@include('employee.actions')</td>
                         </tr>
                     @endforeach
